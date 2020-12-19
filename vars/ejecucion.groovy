@@ -15,14 +15,20 @@ pipeline {
 
                     env.JENKINS_STAGE = ''
 
-                    def ejecucion
+                    // def ejecucion
 
-                    if (params.HERRAMIENTA == 'gradle') {
-                        ejecucion = load 'gradle.groovy'
-                    }else  {
-                        ejecucion = load 'maven.groovy'
+                    if (params.buildtool == 'gradle') {
+                        gradle.call()
+                    }else {
+                        maven.call()
                     }
-                    ejecucion.call()
+
+                    // if (params.HERRAMIENTA == 'gradle') {
+                    //     ejecucion = load 'gradle.groovy'
+                    // }else  {
+                    //     ejecucion = load 'maven.groovy'
+                    // }
+                    // ejecucion.call()
                 }
             }
         }
