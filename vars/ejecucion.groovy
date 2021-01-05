@@ -25,7 +25,7 @@ pipeline {
 
                         for (String item : stagesLowercase) {
                             if (!valid_stages_gradle.contains(item)) {
-                                throw new Exception("El stage ${item} no es valido para proyecto gradle")
+                                error("El stage ${item} no es valido para proyecto gradle")
                             }
                         }
 
@@ -39,7 +39,7 @@ pipeline {
                         } else {
                             //si build está en la lista todo OK hasta RUN
                             //si build no está en la lista problemas !
-                            if (stagesLowercase.contains("build & test")) {
+                            if (stagesLowercase.contains("build") || stagesLowercase.contains("test")) {
                                 //si NO contiene RUN, pero si rest o nexus
                                 if (!stagesLowercase.cointains("run") && 
                                     ( stagesLowercase.cointains("rest") || stagesLowercase.cointains("nexus") )) {
