@@ -25,17 +25,19 @@ pipeline {
                         //def stagesLowercase = stagesList.collect{ it.toLowerCase() }
 
                         for (String item : stagesLowercase) {
+                            //si valida si el stage se encuentra dentro de los validos
                             if (!valid_stages_gradle.contains(item)) {
                                 env.ERROR_MESSAGE = "El stage ${item} no es valido para proyecto gradle"
                                 error(env.ERROR_MESSAGE)
                             }
                         }
-
+                        //aqui todos los stages ingresados fueron validados
                         //si no se le pasa stages, se corren todos
                         if (stagesLowercase.size() == 0) {
                             gradle.call('all')
                         //si solo se pasa 1, ese debe correr
                         } else if (stagesLowercase.size() == 1) {
+                            //según el ejercicio, debiese ejecutarse cuando es 1, por eso no se le agregan validaciones
                             gradle.call(stagesLowercase.get(0))          
                         //si se le pasa varios, se ejecutan secuencial y en orden coherente
                         } else {
@@ -50,14 +52,14 @@ pipeline {
                                 }
                                 //se ejecutan en orden, se toman los validos, se chequea que existan y se ejecutan
                                 for (String item : valid_stages_gradle) {
-
+                                    echo "Ejecutando stage ${item} "
                                     if (item.contains(stagesLowercase)) {
                                         gradle.call(item)
                                     }
                                     //item.contains(stagesLowercase) ? gradle.call(item) : continue
                                 }
                             }else {
-                                env.ERROR_MESSAGE = "Es necesario ejecutar el stage build & test"
+                                env.ERROR_MESSAGE = "Primero es necesario ejecutar el stage build o test"
                                 error(env.ERROR_MESSAGE)
                             }
                         }
@@ -111,7 +113,6 @@ pipeline {
         }
         failure {
             script {
-                echo 'env.JENKINS_STAGE='+ env.JENKINS_STAGE+'='
                 if (env.JENKINS_STAGE == '') {
                     echo 'ENVIANDO MENSAJE SLACK '+"Build Failure: [Gerardo Felmer][${env.JOB_NAME}]["+params.HERRAMIENTA+"] Ejecución Fallida [${env.ERROR_MESSAGE}]"
                     slackSend color: "danger", message: "Build Failure: [Gerardo Felmer][${env.JOB_NAME}]["+params.HERRAMIENTA+"] Ejecución Fallida [${env.ERROR_MESSAGE}]", 
