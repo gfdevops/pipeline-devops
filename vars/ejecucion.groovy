@@ -23,6 +23,7 @@ pipeline {
                         def stagesLowercase = params.stage.tokenize(";").collect{ it.toLowerCase() }
                         //se pasan los stages ingresados a minusculas
                         //def stagesLowercase = stagesList.collect{ it.toLowerCase() }
+                        echo 'STAGES INGRESADOS => '+ stagesLowercase.toString()
 
                         for (String item : stagesLowercase) {
                             //si valida si el stage se encuentra dentro de los validos
@@ -51,13 +52,14 @@ pipeline {
                                     error(env.ERROR_MESSAGE)
                                 }
                                 //se ejecutan en orden, se toman los validos, se chequea que existan y se ejecutan
-                                for (String item : valid_stages_gradle) {
-                                    println("Ejecutando stage => "+item);
-                                    if (stagesLowercase.contains("run")) {
-                                        gradle.call(item)
-                                    }
-                                    //item.contains(stagesLowercase) ? gradle.call(item) : continue
-                                }
+                                // for (String item : valid_stages_gradle) {
+                                //     println("Ejecutando stage => "+item);
+                                //     if (stagesLowercase.contains("run")) {
+                                //         gradle.call(item)
+                                //     }
+                                //     //item.contains(stagesLowercase) ? gradle.call(item) : continue
+                                // }
+                                 gradle.call('run')
                             }else {
                                 env.ERROR_MESSAGE = "Primero es necesario ejecutar el stage build o test"
                                 error(env.ERROR_MESSAGE)
