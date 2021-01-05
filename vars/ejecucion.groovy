@@ -53,7 +53,7 @@ pipeline {
                                 //se ejecutan en orden, se toman los validos, se chequea que existan y se ejecutan
                                 for (String item : valid_stages_gradle) {
                                     echo "Ejecutando stage ${item} "
-                                    if (item.contains(stagesLowercase)) {
+                                    if (item == stagesLowercase) {
                                         gradle.call(item)
                                     }
                                     //item.contains(stagesLowercase) ? gradle.call(item) : continue
