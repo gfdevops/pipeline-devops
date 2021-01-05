@@ -17,7 +17,7 @@ pipeline {
 
                     if (params.HERRAMIENTA == 'gradle') {
                         //se definen los stages validos para gradle
-                        def valid_stages_gradle = ["build & test","sonar","run","rest","nexus"]
+                        def valid_stages_gradle = ["build","test","sonar","run","rest","nexus"]
                         //se separan los stages por punto y coma
                         def stagesLowercase = params.stage.tokenize(";").collect{ it.toLowerCase() }
                         //se pasan los stages ingresados a minusculas
@@ -106,8 +106,8 @@ pipeline {
             teamDomain: 'devops-usach-2020', tokenCredentialId: 'slack-credentials'
         }
         failure {
-            echo 'ENVIANDO MENSAJE SLACK '+"Build Success: [Gerardo Felmer][${env.JOB_NAME}]["+params.HERRAMIENTA+"] Ejecución Fallida en stage [${env.JENKINS_STAGE}]"
-            slackSend color: "danger", message: "Build Success: [Gerardo Felmer][${env.JOB_NAME}]["+params.HERRAMIENTA+"] Ejecución Fallida en stage [${env.JENKINS_STAGE}]", 
+            echo 'ENVIANDO MENSAJE SLACK '+"Build Failure: [Gerardo Felmer][${env.JOB_NAME}]["+params.HERRAMIENTA+"] Ejecución Fallida en stage [${env.JENKINS_STAGE}]"
+            slackSend color: "danger", message: "Build Failure: [Gerardo Felmer][${env.JOB_NAME}]["+params.HERRAMIENTA+"] Ejecución Fallida en stage [${env.JENKINS_STAGE}]", 
             teamDomain: 'devops-usach-2020', tokenCredentialId: 'slack-credentials'
         }
     }
