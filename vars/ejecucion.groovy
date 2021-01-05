@@ -14,6 +14,7 @@ pipeline {
                 script {
 
                     env.JENKINS_STAGE = ''
+                    env.ERROR_MESSAGE =''
 
                     if (params.HERRAMIENTA == 'gradle') {
                         //se definen los stages validos para gradle
@@ -25,7 +26,8 @@ pipeline {
 
                         for (String item : stagesLowercase) {
                             if (!valid_stages_gradle.contains(item)) {
-                                error("El stage ${item} no es valido para proyecto gradle")
+                                env.ERROR_MESSAGE = "El stage ${item} no es valido para proyecto gradle"
+                                error(env.ERROR_MESSAGE)
                             }
                         }
 
@@ -43,7 +45,8 @@ pipeline {
                                 //si NO contiene RUN, pero si rest o nexus
                                 if (!stagesLowercase.cointains("run") && 
                                     ( stagesLowercase.cointains("rest") || stagesLowercase.cointains("nexus") )) {
-                                    throw new Exception("Es necesario ejecutar el stage run si se quiere correr rest o nexus")
+                                    env.ERROR_MESSAGE = "Es necesario ejecutar el stage run si se quiere correr rest o nexus"
+                                    error(env.ERROR_MESSAGE)
                                 }
                                 //se ejecutan en orden, se toman los validos, se chequea que existan y se ejecutan
                                 for (String item : valid_stages_gradle) {
@@ -54,7 +57,8 @@ pipeline {
                                     //item.contains(stagesLowercase) ? gradle.call(item) : continue
                                 }
                             }else {
-                                throw new Exception("Es necesario ejecutar el stage build & test")
+                                env.ERROR_MESSAGE = "Es necesario ejecutar el stage build & test"
+                                error(env.ERROR_MESSAGE)
                             }
                         }
                     }
@@ -106,9 +110,15 @@ pipeline {
             teamDomain: 'devops-usach-2020', tokenCredentialId: 'slack-credentials'
         }
         failure {
-            echo 'ENVIANDO MENSAJE SLACK '+"Build Failure: [Gerardo Felmer][${env.JOB_NAME}]["+params.HERRAMIENTA+"] Ejecución Fallida en stage [${env.JENKINS_STAGE}]"
-            slackSend color: "danger", message: "Build Failure: [Gerardo Felmer][${env.JOB_NAME}]["+params.HERRAMIENTA+"] Ejecución Fallida en stage [${env.JENKINS_STAGE}]", 
-            teamDomain: 'devops-usach-2020', tokenCredentialId: 'slack-credentials'
+            if (env.JENKINS_STAGE == '[]') {
+                echo 'ENVIANDO MENSAJE SLACK '+"Build Failure: [Gerardo Felmer][${env.JOB_NAME}]["+params.HERRAMIENTA+"] Ejecución Fallida [${env.ERROR_MESSAGE}]"
+                slackSend color: "danger", message: "Build Failure: [Gerardo Felmer][${env.JOB_NAME}]["+params.HERRAMIENTA+"] Ejecución Fallida [${env.ERROR_MESSAGE}]", 
+                teamDomain: 'devops-usach-2020', tokenCredentialId: 'slack-credentials'
+            }else {
+                echo 'ENVIANDO MENSAJE SLACK '+"Build Failure: [Gerardo Felmer][${env.JOB_NAME}]["+params.HERRAMIENTA+"] Ejecución Fallida en stage [${env.JENKINS_STAGE}]"
+                slackSend color: "danger", message: "Build Failure: [Gerardo Felmer][${env.JOB_NAME}]["+params.HERRAMIENTA+"] Ejecución Fallida en stage [${env.JENKINS_STAGE}]", 
+                teamDomain: 'devops-usach-2020', tokenCredentialId: 'slack-credentials'
+            }
         }
     }
 }
