@@ -111,7 +111,8 @@ pipeline {
         }
         failure {
             script {
-                if (env.JENKINS_STAGE == '[]') {
+                echo 'env.JENKINS_STAGE='+ env.JENKINS_STAGE+'='
+                if (env.JENKINS_STAGE == '') {
                     echo 'ENVIANDO MENSAJE SLACK '+"Build Failure: [Gerardo Felmer][${env.JOB_NAME}]["+params.HERRAMIENTA+"] Ejecución Fallida [${env.ERROR_MESSAGE}]"
                     slackSend color: "danger", message: "Build Failure: [Gerardo Felmer][${env.JOB_NAME}]["+params.HERRAMIENTA+"] Ejecución Fallida [${env.ERROR_MESSAGE}]", 
                     teamDomain: 'devops-usach-2020', tokenCredentialId: 'slack-credentials'
