@@ -110,14 +110,16 @@ pipeline {
             teamDomain: 'devops-usach-2020', tokenCredentialId: 'slack-credentials'
         }
         failure {
-            if (env.JENKINS_STAGE == '[]') {
-                echo 'ENVIANDO MENSAJE SLACK '+"Build Failure: [Gerardo Felmer][${env.JOB_NAME}]["+params.HERRAMIENTA+"] Ejecución Fallida [${env.ERROR_MESSAGE}]"
-                slackSend color: "danger", message: "Build Failure: [Gerardo Felmer][${env.JOB_NAME}]["+params.HERRAMIENTA+"] Ejecución Fallida [${env.ERROR_MESSAGE}]", 
-                teamDomain: 'devops-usach-2020', tokenCredentialId: 'slack-credentials'
-            }else {
-                echo 'ENVIANDO MENSAJE SLACK '+"Build Failure: [Gerardo Felmer][${env.JOB_NAME}]["+params.HERRAMIENTA+"] Ejecución Fallida en stage [${env.JENKINS_STAGE}]"
-                slackSend color: "danger", message: "Build Failure: [Gerardo Felmer][${env.JOB_NAME}]["+params.HERRAMIENTA+"] Ejecución Fallida en stage [${env.JENKINS_STAGE}]", 
-                teamDomain: 'devops-usach-2020', tokenCredentialId: 'slack-credentials'
+            script {
+                if (env.JENKINS_STAGE == '[]') {
+                    echo 'ENVIANDO MENSAJE SLACK '+"Build Failure: [Gerardo Felmer][${env.JOB_NAME}]["+params.HERRAMIENTA+"] Ejecución Fallida [${env.ERROR_MESSAGE}]"
+                    slackSend color: "danger", message: "Build Failure: [Gerardo Felmer][${env.JOB_NAME}]["+params.HERRAMIENTA+"] Ejecución Fallida [${env.ERROR_MESSAGE}]", 
+                    teamDomain: 'devops-usach-2020', tokenCredentialId: 'slack-credentials'
+                }else {
+                    echo 'ENVIANDO MENSAJE SLACK '+"Build Failure: [Gerardo Felmer][${env.JOB_NAME}]["+params.HERRAMIENTA+"] Ejecución Fallida en stage [${env.JENKINS_STAGE}]"
+                    slackSend color: "danger", message: "Build Failure: [Gerardo Felmer][${env.JOB_NAME}]["+params.HERRAMIENTA+"] Ejecución Fallida en stage [${env.JENKINS_STAGE}]", 
+                    teamDomain: 'devops-usach-2020', tokenCredentialId: 'slack-credentials'
+                }
             }
         }
     }
