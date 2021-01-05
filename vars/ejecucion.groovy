@@ -5,7 +5,7 @@ pipeline {
 
     parameters { 
         choice(name: 'HERRAMIENTA', choices: ['gradle', 'maven'], description: '') 
-        string(name: 'stage' defaultValue: '', description: '' )
+        string(name: 'stage', defaultValue: '', description: '' )
         }
 
     stages {
