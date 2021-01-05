@@ -23,7 +23,6 @@ pipeline {
                         def stagesLowercase = params.stage.tokenize(";").collect{ it.toLowerCase() }
                         //se pasan los stages ingresados a minusculas
                         //def stagesLowercase = stagesList.collect{ it.toLowerCase() }
-                        echo 'STAGES INGRESADOS => '+ stagesLowercase.toString()
 
                         for (String item : stagesLowercase) {
                             //si valida si el stage se encuentra dentro de los validos
@@ -46,20 +45,19 @@ pipeline {
                             //si build no está en la lista problemas !
                             if (stagesLowercase.contains("build") || stagesLowercase.contains("test")) {
                                 //si NO contiene RUN, pero si rest o nexus
-                                if (!stagesLowercase.cointains("run") && 
-                                    ( stagesLowercase.cointains("rest") || stagesLowercase.cointains("nexus") )) {
+                                if (!stagesLowercase.contains("run") && 
+                                    ( stagesLowercase.contains("rest") || stagesLowercase.contains("nexus") )) {
                                     env.ERROR_MESSAGE = "Es necesario ejecutar el stage run si se quiere correr rest o nexus"
                                     error(env.ERROR_MESSAGE)
                                 }
                                 //se ejecutan en orden, se toman los validos, se chequea que existan y se ejecutan
-                                // for (String item : valid_stages_gradle) {
-                                //     println("Ejecutando stage => "+item);
-                                //     if (stagesLowercase.contains("run")) {
-                                //         gradle.call(item)
-                                //     }
-                                //     //item.contains(stagesLowercase) ? gradle.call(item) : continue
-                                // }
-                                 gradle.call('run')
+                                for (String item : valid_stages_gradle) {
+                                    println("Ejecutando stage => "+item);
+                                    if (stagesLowercase.contains(item)) {
+                                        gradle.call(item)
+                                    }
+                                    //item.contains(stagesLowercase) ? gradle.call(item) : continue
+                                }
                             }else {
                                 env.ERROR_MESSAGE = "Primero es necesario ejecutar el stage build o test"
                                 error(env.ERROR_MESSAGE)
