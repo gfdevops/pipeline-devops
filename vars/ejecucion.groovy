@@ -12,7 +12,7 @@ pipeline {
         stage('Pipeline') {
             steps {
                 script {
-
+                    sh 'env'
                     env.JENKINS_STAGE = ''
                     env.ERROR_MESSAGE =''
 
