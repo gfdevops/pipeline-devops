@@ -7,11 +7,7 @@ def getBranchName() {
 }
 
 def isBranchName(String branchName) {
-    if (env.GIT_BRANCH == env.GIT_BRANCH) {
-        return true;
-    }
-    return false;
-
+    return env.GIT_BRNACH==env.GIT_BRANCH
 }
 
 //Validar formato de nombre de rama release según patrón
@@ -20,10 +16,6 @@ def validateReleaseNameFormat(String releaseName) {
     //regex pattern
     // ^(release-v[0-9]+)\-([0-9]+)\-([0-9]+)?$
     //para formato release-v1-0-0
-    
-    if (releaseName =~ /^(release-v[0-9]+)\-([0-9]+)\-([0-9]+)?$/) { // false
-        return true;
-    } 
+    return releaseName =~ /^(release-v[0-9]+)\-([0-9]+)\-([0-9]+)?$/
 
-    return false;
 }
