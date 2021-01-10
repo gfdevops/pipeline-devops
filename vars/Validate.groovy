@@ -1,9 +1,9 @@
 //Validar el tipo de rama a ejecutar (feature, develop o release)
 def getBranchName() {
-                    //     def scmVars = checkout scm
-                    // String branch = scmVars.GIT_BRANCH
+    def scmVars = checkout scm
+    String branch = scmVars.GIT_BRANCH
     echo 'isBranchName => '+env.GIT_BRANCH;
-    return env.GIT_BRANCH
+    return branch
 
 }
 
