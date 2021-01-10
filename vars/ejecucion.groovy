@@ -19,6 +19,10 @@ pipeline {
                     env.JENKINS_STAGE = ''
                     env.ERROR_MESSAGE =''
 
+                    if (validate.validateReleaseNameFormat('release-v1-0-0')) {
+                        figlet 'Release name OK'
+                    }
+
                     if (params.HERRAMIENTA == 'gradle') {
                         //se definen los stages validos para gradle
                         def valid_stages_gradle = ["build","test","sonar","run","rest","nexus"]
