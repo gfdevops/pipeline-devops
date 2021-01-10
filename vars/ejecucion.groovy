@@ -14,7 +14,7 @@ pipeline {
                 script {
                     sh 'env'
                     figlet params.HERRAMIENTA
-                    figlet validate.getBranchName
+                    figlet validate.getBranchName()
 
                     env.JENKINS_STAGE = ''
                     env.ERROR_MESSAGE =''
