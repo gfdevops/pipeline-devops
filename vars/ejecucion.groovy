@@ -67,8 +67,11 @@ pipeline {
 
 
                     if (params.HERRAMIENTA == 'maven') {
+                        GroovyShell shell = new GroovyShell()
+                        def Validate = shell.parse(new File('Validate.groovy'))
+
                         //se definen los stages validos para maven
-                        def valid_stages_maven = ["build","test","jar","sonarqube","upload_nexus"]
+                        def valid_stages_maven = ["build","test","jar","sonarqube","nexusci","downloadnexus","rundownloadedjar","rest","nexuscd"]
                         //se separan los stages por punto y coma
                         def stagesLowercase = params.stage.tokenize(";").collect{ it.toLowerCase() }
                         //se pasan los stages ingresados a minusculas
@@ -100,11 +103,24 @@ pipeline {
                                     env.ERROR_MESSAGE = "Es necesario ejecutar el stage build y jar, antes de ejecutar sonarqube o upload_nexus"
                                     error(env.ERROR_MESSAGE)
                                 }
+                                def branchName = Validate.getBranchName();
+
                                 //se ejecutan en orden, se toman los validos, se chequea que existan y se ejecutan
                                 for (String item : valid_stages_maven) {
                                     if (stagesLowercase.contains(item)) {
-                                        println("Ejecutando stage maven => "+item);
-                                        maven.call(item)
+                                        if (branchName == 'develop') {
+                                            if (item == 'build' || item == 'test' || item == 'sonar'|| item == 'jar'|| item == 'nexusci') {
+                                                maven.call(item)
+                                            }
+                                        }
+
+                                        if (branchName == 'release') {
+                                            if (item == 'downloadnexus' || item == 'rundownloadedjar' || item == 'nexuscd') {
+                                                maven.call(item)
+                                            }
+                                        }
+
+                                        println("Ejecutando stage maven => "+item);                                   
                                     }
                                     //item.contains(stagesLowercase) ? gradle.call(item) : continue
                                 }
