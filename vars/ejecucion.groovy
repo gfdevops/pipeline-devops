@@ -19,8 +19,10 @@ pipeline {
                     env.JENKINS_STAGE = ''
                     env.ERROR_MESSAGE =''
 
-                    if (validate.validateReleaseNameFormat('release-v1-0-0')) {
-                        figlet 'Release name OK'
+                    if (validate.validateReleaseNameFormat(validate.getBranchName())) {
+                        echo 'Release name OK '+validate.getBranchName()
+                    }else {
+                        echo 'Release no coincide con release-v{major}-{minor}-{patch} '+validate.getBranchName()
                     }
 
                     if (params.HERRAMIENTA == 'gradle') {
