@@ -13,10 +13,9 @@ pipeline {
             steps {
                 script {
                     sh 'env'
-                    figlet 'hola'
-                    figlet 'DevOps'
                     figlet params.HERRAMIENTA
-                    
+                    figlet validate.getBranchName
+
                     env.JENKINS_STAGE = ''
                     env.ERROR_MESSAGE =''
 
@@ -90,7 +89,25 @@ pipeline {
                         //aqui todos los stages ingresados fueron validados
                         //si no se le pasa stages, se corren todos
                         if (stagesLowercase.size() == 0) {
-                            maven.call('all')
+                            for (String item : valid_stages_maven) {
+                                if (stagesLowercase.contains(item)) {
+                                    if (validate.isBranchName('develop')) {
+                                        if (item == 'build' || item == 'test' || item == 'sonar'|| item == 'jar'|| item == 'nexusci') {
+                                            maven.call(item)
+                                        }
+                                    }
+
+                                    if (validate.isBranchName('release')) {
+                                        if (item == 'downloadnexus' || item == 'rundownloadedjar' || item == 'nexuscd') {
+                                                maven.call(item)
+                                        }
+                                    }
+
+                                    println("Ejecutando stage maven => "+item);                                   
+                                }
+                            }
+
+                            
                         //si solo se pasa 1, ese debe correr
                         } else if (stagesLowercase.size() == 1) {
                             //según el ejercicio, debiese ejecutarse cuando es 1, por eso no se le agregan validaciones
@@ -107,8 +124,6 @@ pipeline {
                                     error(env.ERROR_MESSAGE)
                                 }
                                 
-                                echo 'getBranchName =>'+validate.getBranchName
-
                                 //se ejecutan en orden, se toman los validos, se chequea que existan y se ejecutan
                                 for (String item : valid_stages_maven) {
                                     if (stagesLowercase.contains(item)) {
