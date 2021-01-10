@@ -116,7 +116,7 @@ pipeline {
                                             }
                                         }
 
-                                        if (validate.isBranchName('develop')) {
+                                        if (validate.isBranchName('release')) {
                                             if (item == 'downloadnexus' || item == 'rundownloadedjar' || item == 'nexuscd') {
                                                 maven.call(item)
                                             }
