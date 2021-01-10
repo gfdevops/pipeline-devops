@@ -2,7 +2,7 @@
 def getBranchName() {
                     //     def scmVars = checkout scm
                     // String branch = scmVars.GIT_BRANCH
-    println('getBranchName => '+env.GIT_BRANCH);
+    echo 'isBranchName => '+env.GIT_BRANCH;
     return env.GIT_BRANCH
 
 }
@@ -10,7 +10,7 @@ def getBranchName() {
 def isBranchName(String branchName) {
                     //     def scmVars = checkout scm
                     // String branch = scmVars.GIT_BRANCH
-    println('isBranchName => '+env.GIT_BRANCH);
+    echo 'isBranchName => '+env.GIT_BRANCH;
 
     if (env.GIT_BRANCH == env.GIT_BRANCH) {
         return true;
