@@ -72,7 +72,7 @@ pipeline {
 
                     if (params.HERRAMIENTA == 'maven') {
                         GroovyShell shell = new GroovyShell()
-                        def Validate = shell.parse(new File('Validate.groovy'))
+                        def Validate = shell.parse(new File('./Validate.groovy'))
 
                         //se definen los stages validos para maven
                         def valid_stages_maven = ["build","test","jar","sonarqube","nexusci","downloadnexus","rundownloadedjar","rest","nexuscd"]
