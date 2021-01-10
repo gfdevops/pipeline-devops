@@ -12,7 +12,11 @@ pipeline {
         stage('Pipeline') {
             steps {
                 script {
-
+                    sh 'env'
+                    figlet 'hola'
+                    figlet 'DevOps'
+                    figlet params.HERRAMIENTA
+                    
                     env.JENKINS_STAGE = ''
                     env.ERROR_MESSAGE =''
 
