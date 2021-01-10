@@ -106,6 +106,8 @@ pipeline {
                                     env.ERROR_MESSAGE = "Es necesario ejecutar el stage build y jar, antes de ejecutar sonarqube o upload_nexus"
                                     error(env.ERROR_MESSAGE)
                                 }
+                                
+                                echo 'getBranchName =>'+validate.getBranchName
 
                                 //se ejecutan en orden, se toman los validos, se chequea que existan y se ejecutan
                                 for (String item : valid_stages_maven) {
